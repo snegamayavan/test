@@ -1,68 +1,346 @@
-pragma solidity ^0.4.0;
-contract bank{
-address public   owner; 
- 
-   string public name;
-    uint256 public decimals;
-    string public symbol;
-    uint256 public totalSupply;
-   
-    mapping(address=>uint256) balance;
-    mapping(address=>mapping(address=>uint256)) spender;
-  
-    function bank() public payable{
-    
-         owner=msg.sender;
-            totalSupply = 5000;
-           name = "MNW";
-            symbol = "$";
-            decimals = 0;
-        balance[owner]=totalSupply;
-    }
-     function balanceOf(address owner) public constant returns(uint256){
-     
-      return balance[owner];   
-}
-modifier mod(){
-    
-    require (owner==msg.sender);
-    _;
-}
-function mint(uint256 amount)public mod {
-      
-  if(amount<totalSupply &&  balance[owner]+amount<totalSupply)
-    
-      balance[owner]+=amount;
-      else
-      revert();
-    }  
-  
-function transfer(address _to,uint256 _amount) public returns(bool){
-    
-balance[_to]+=_amount;    
-  balance[owner]-=_amount;   
-  
-   return true;
-}
-function approve(address _spender,uint256 value)public returns(bool){
-  spender[msg.sender][_spender]=value; 
-   
-    return true;
-    
-}
-function allowance(address owner,address _spender)public view returns(uint256){
-    return spender[owner][_spender];
-    
-}
+<!DOCTYPE html>
+<html>
+	<head><title>libary</title>
 
-function transferFrom(address _from,address _too,uint256 vvalue)returns(bool){
-    require(balance[_from]>vvalue && vvalue>0 && spender[_from][_too] > vvalue);
-    balance[_from]-=vvalue;
-    spender[_from][_too]-=vvalue;
-    balance[_too]+=vvalue;
-    return true;
-    
-}
-}
+</head>
+		<script src="web3.min.js"></script>
+<body>
+		
+		
+		<input type="text" id="a" placeholder="owneraddress" /><br><br>
+		<input type="button" value="ownerbalance" onclick="balanceOf()" /> <br><br>
+		
+		<input type="text" id="b" placeholder="Toaddress" /><br><br>
+		<input type="text" id="c" placeholder="amount" /><br><br>
+		<input type="button" value="transfer" onclick="transfer()" /> <br><br>
 
 
+		
+		<input type="text" id="d" placeholder="amount" /><br><br>
+		<input type="button" value="mint" onclick="mint()" /> <br><br>
+
+
+
+		<input type="text" id="e" placeholder="Toaddress" /><br><br>
+		<input type="text" id="f" placeholder="amount" /><br><br>
+		<input type="button" value="approve" onclick="approve()" /> <br><br>
+
+
+		<input type="text" id="g" placeholder="owner" /><br><br>
+		<input type="text" id="h" placeholder="spender" /><br><br>
+		<input type="button" value="allowance" onclick="allowance()" /> <br><br>
+
+		<input type="text" id="i" placeholder="owner" /><br><br>
+		<input type="text" id="j" placeholder="spender" /><br><br>
+		<input type="text" id="k" placeholder="amount" /><br><br>
+		<input type="button" value="transfer" onclick="transferFrom()" /> <br><br>
+
+</body>
+
+<script>
+		web3.eth.defaultAccount = web3.eth.accounts[0];
+		var abi=web3.eth.contract([
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"name": "",
+				"type": "address"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "owner",
+				"type": "address"
+			}
+		],
+		"name": "balanceOf",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "decimals",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "totalSupply",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "symbol",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [
+			{
+				"name": "owner",
+				"type": "address"
+			},
+			{
+				"name": "_spender",
+				"type": "address"
+			}
+		],
+		"name": "allowance",
+		"outputs": [
+			{
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": true,
+		"inputs": [],
+		"name": "name",
+		"outputs": [
+			{
+				"name": "",
+				"type": "string"
+			}
+		],
+		"payable": false,
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_spender",
+				"type": "address"
+			},
+			{
+				"name": "value",
+				"type": "uint256"
+			}
+		],
+		"name": "approve",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_from",
+				"type": "address"
+			},
+			{
+				"name": "_too",
+				"type": "address"
+			},
+			{
+				"name": "vvalue",
+				"type": "uint256"
+			}
+		],
+		"name": "transferFrom",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "_to",
+				"type": "address"
+			},
+			{
+				"name": "_amount",
+				"type": "uint256"
+			}
+		],
+		"name": "transfer",
+		"outputs": [
+			{
+				"name": "",
+				"type": "bool"
+			}
+		],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"constant": false,
+		"inputs": [
+			{
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "mint",
+		"outputs": [],
+		"payable": false,
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"payable": true,
+		"stateMutability": "payable",
+		"type": "constructor"
+	}
+]
+	
+	);
+		var conAddr=abi.at('0x9a8e666611adbe9d602daad7325eb36c67e37d93');
+		function balanceOf(){
+				var a=document.getElementById('a').value;
+				
+				conAddr.balanceOf(a,function(error,result){
+					if(!error){
+						alert(result);
+					}
+					else{
+						alert("errored");
+					}
+				
+		});
+		}
+		
+		
+		function transfer(){
+				
+				var b=document.getElementById('b').value;
+                                var c=parseInt(document.getElementById('c').value);
+				conAddr.transfer(b,c,function(error,result){
+					if(!error){
+						alert(result);
+					}
+					else{
+						alert("errored");
+					}
+		});
+		}
+		
+		function mint(){
+
+
+				
+                                var d=parseInt(document.getElementById('d').value);
+				conAddr.mint(d,function(error,result){
+					if(!error){
+						alert(result);
+					}
+					else{
+						alert("errored");
+					}
+		});
+
+		}
+function allowance(){
+
+
+				var g=document.getElementById('g').value;
+				var h=document.getElementById('h').value;
+                                
+				conAddr.allowance(g,h,function(error,result){
+					if(!error){
+						alert(result);
+					}
+					else{
+						alert("errored");
+					}
+		});
+
+		}
+function approve(){
+
+
+				var e=document.getElementById('e').value;
+                                var f=parseInt(document.getElementById('f').value);
+				conAddr.approve(e,f,function(error,result){
+					if(!error){
+						alert(result);
+					}
+					else{
+						alert("errored");
+					}
+		});
+
+		}
+function transferFrom(){
+
+
+				var i=document.getElementById('i').value;
+                                var j=parseInt(document.getElementById('j').value);
+                                var k=parseInt(document.getElementById('k').value);
+				conAddr.transferFrom(i,j,k,function(error,result){
+					if(!error){
+						alert(result);
+					}
+					else{
+						alert("errored");
+					}
+		});
+
+		}
+		
+</script>
+
+</html>
